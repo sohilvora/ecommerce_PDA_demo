@@ -45,4 +45,25 @@ class Crud extends Db
         }
         return $text;
     }
+
+    public function get($table_name,$offset,$records_per_page)
+    {
+        $sql = "SELECT * FROM $table_name LIMIT $offset, $records_per_page";
+        $stmt = $this->db->prepare($sql) ;
+        $stmt->execute();
+        $result=$stmt->fetchALL(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    public function pagination($table, $no_of_records_per_page)
+    {
+        $query = "SELECT COUNT(*) FROM $table";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $total_records =$stmt->fetchColumn();
+        $total_pages = ceil($total_records / $no_of_records_per_page);
+
+        return $total_pages;
+    }
 }

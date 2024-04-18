@@ -1,4 +1,19 @@
-<?php require_once "includes/header.php"; ?>
+<?php
+require_once "includes/header.php";
+require_once "../class/Crud.php";
+$obj = new Crud();
+$no_of_records_per_page=2;
+
+if(isset($_GET['pageno']))
+{
+    $pageno = $_GET['pageno'];
+}
+else
+{
+    $pageno = 1;
+}
+$offset = ($pageno-1)* $no_of_records_per_page;
+?>
 
 <div class="container">
     <section class="category-section">
@@ -32,6 +47,48 @@
                 </div>
             </div>
         </div>
+
+        <table class="table table-bordered">
+            <tr>
+                <th>Id</th>
+                <th>Category Name</th>
+                <th>Date</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <?php 
+            foreach($obj->get('category',$offset,$no_of_records_per_page)as $row)
+            {?>
+            <tr>
+                <td><?=$row['category_id']; ?></td>
+                <td><?=$row['category_name']; ?></td>
+                <td><?=$row['cat_created_at']; ?></td>
+                <td><a href="" class="btn btn-primary">Edit</a></td>
+                <td><a href="" class="btn btn-danger">Delete</a></td>
+            </tr>
+            <?php
+            }?>
+        </table>
+        <ul class="pagination">
+        <li class="page-item "><a href="?pageno=1" class="page-link">First</a></li>
+        <li class="page-item <?php if($pageno<=1){echo 'disabled';}?>"><a href="<?php if($pageno<=1){echo '#';}else{echo'?pageno='.($pageno-1);}?>" class="page-link">Previous</a></li>
+
+        <?php
+        $total_pages=$obj->pagination('category',$no_of_records_per_page);
+        for ($i = 1; $i <= $total_pages; $i++) {
+            if($pageno == $i)
+            {
+                echo '<li class="page-item active"><a href="?pageno='.$i.'" class="page-link">'. $i.'</a></li>';
+            }
+            else{
+                echo '<li class="page-item"><a href="?pageno='.$i.'" class="page-link">'. $i.'</a></li>';
+            }
+
+        } 
+        ?>
+        <li class="page-item <?php if($pageno >= $total_pages){echo 'disabled';}?>"><a href="<?php if($pageno>=$total_pages){echo '#';}else{echo'?pageno='.($pageno+ 1);}?>" class="page-link">Next</a></li>
+        <li class="page-item <?php if($pageno >= $total_pages){echo 'disabled';} ?>"><a href="?pageno=<?= $total_pages;?>" class="page-link">Last</a></li>
+        </ul>
     </section>
 </div>
 <?php require_once "includes/footer.php"; ?>
@@ -48,7 +105,7 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    
+
                     if (response.status == 0) {
                         $("#error").html(response.msg_error);
                     }
