@@ -53,7 +53,7 @@
         <section class="sidebar">
             <ul class="nav-bar">
                 <li><a href=""><i class="fas fa-tachometer-alt"></i> <span class="text-link">Dashboard</span></a></li>
-                <li><a href=""><i class="fas fa-dolly-flatbed"></i> <span class="text-link">Brand</span></a></li>
+                <li><a href="brand.php"><i class="fas fa-dolly-flatbed"></i> <span class="text-link">Brand</span></a></li>
                 <li><a href="./category.php"><i class="fas fa-dolly"></i> <span class="text-link">Category</span></a></li>
                 <li><a href=""><i class="fas fa-shopping-basket"></i> <span class="text-link">Products</span></a></li>
                 <li><a href=""><i class="fas fa-truck"></i> <span class="text-link">Orders</span></a></li>

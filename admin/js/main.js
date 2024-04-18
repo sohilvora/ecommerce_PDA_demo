@@ -26,5 +26,11 @@ $(document).ready(function () {
   $('.add_category').click(function(){
     $('#catModal').modal('show');
     $('.modal-title').text('Add a New Category');
+    $('#form_type').val('save');
+  });
+  $('.add_brand').click(function(){
+    $('#brandModal').modal('show');
+    $('.modal-title').text('Add a New Brand');
+    $('#form_type').val('save');
   });
 });

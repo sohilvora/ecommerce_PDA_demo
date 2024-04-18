@@ -46,24 +46,77 @@ class Crud extends Db
         return $text;
     }
 
-    public function get($table_name,$offset,$records_per_page)
+    public function get($table_name, $offset, $records_per_page)
     {
         $sql = "SELECT * FROM $table_name LIMIT $offset, $records_per_page";
-        $stmt = $this->db->prepare($sql) ;
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        $result=$stmt->fetchALL(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
         return $result;
     }
+    public function custom_get($table_name, $where = '')
+    {
+        $sql = "SELECT * FROM $table_name ";
+        if (!empty($where)) {
+            $sql .= $where;
+        }
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
+        return $result;
+    }
     public function pagination($table, $no_of_records_per_page)
     {
         $query = "SELECT COUNT(*) FROM $table";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        $total_records =$stmt->fetchColumn();
+        $total_records = $stmt->fetchColumn();
         $total_pages = ceil($total_records / $no_of_records_per_page);
 
         return $total_pages;
+    }
+    public function update($table,$data,$where= '')
+    {
+        if (!empty($data)) {
+            $fields = '';
+            $x = 1;
+            $fieldscount = count($data);
+            foreach ($data as $field => $value) {
+                $fields .= "{$field}=:{$field}";
+                if ($x < $fieldscount) {
+                    $fields .= ", ";
+                }
+                $x++;
+            }
+        }
+        $sql = "UPDATE $table SET {$fields} $where";
+        $stmt = $this->db->prepare($sql);
+        try {
+            $this->db->beginTransaction();
+            $stmt->execute($data);
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error:" .$e->getMessage();
+            $this->db->rollback();
+        }
+
+    }
+    public function delete($table_name,$where)
+    {
+        $sql = "DELETE FROM $table_name $where";
+        $stmt = $this->db->prepare($sql);
+        try{
+            $stmt->execute();
+            return true;
+        }
+        catch(PDOException $e)
+        {
+            echo "Error:". $e->getMessage();
+            $this->db->rollback();
+        }
+
     }
 }
