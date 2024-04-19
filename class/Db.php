@@ -4,7 +4,7 @@ class Db
     private $host = 'localhost';
     private $username = 'root';
     private $password = '';
-    private $database = 'ecommerce_pda_demo';
+    private $database = 'pdo_ecommerce_demo';
 
     public function __construct()
     {
