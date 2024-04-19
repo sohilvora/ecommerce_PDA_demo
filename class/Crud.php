@@ -15,7 +15,6 @@ class Crud extends Db
         }
         $sql = "INSERT INTO {$table_name}(" . implode(',', $fields) . ")VALUES(" . implode(',', $placeholder) . ")";
         $stmt = $this->db->prepare($sql);
-
         try {
             $this->db->beginTransaction();
             $stmt->execute($data);
